@@ -73,27 +73,25 @@ function XOGame() {
   this.winner = '';
 
   this.players = ['player1', 'player2'];
-}
 
-XOGame.prototype.move = function(x, y) {
-  var playerToShape = {
+  this.playerToShape = {
     'player1': X,
     'player2': O
   };
+}
 
-  this.board.set(x, y, playerToShape[this.turn]);
+XOGame.prototype.move = function(x, y) {
+  this.board.set(x, y, this.playerToShape[this.turn]);
 
   this.winner = this.getWinner();
 
   if (!this.winner) {
-    this.setTurn(this.nextPlayerName());
+    this.setTurn(this.nextPlayerName(this.turn));
   }
 };
 
-XOGame.prototype.nextPlayerName = function() {
-  var that = this;
-
-  return this.players.find(function(player) { return player !== that.turn });
+XOGame.prototype.nextPlayerName = function(currentPlayerName) {
+  return this.players.find(function(player) { return player !== currentPlayerName });
 };
 
 XOGame.prototype.toString = function() {
@@ -107,28 +105,28 @@ XOGame.prototype.getValidLines = function() {
     .concat(this.board.getDiagonals());
 }
 
-XOGame.prototype.checkIsWinner = function(who) {
+XOGame.prototype.checkIsWinner = function(playerName) {
   return this.getValidLines().some(function(line) {
     return line.every(function(value) {
-      return value === who;
-    });
-  });
+      return value === this.playerToShape[playerName];
+    }, this);
+  }, this);
 };
 
 XOGame.prototype.getWinner = function() {
-  if (this.checkIsWinner(X)) {
-    return X;
-  }
-
-  if (this.checkIsWinner(O)) {
-    return O;
-  }
-
-  return null;
+  return this.players.find(function(player) {
+    return this.checkIsWinner(player);
+  }, this) || '';
 };
 
 XOGame.prototype.setTurn = function(playerName) {
   this.turn = playerName;
+}
+
+XOGame.prototype.reset = function() {
+  this.board = new Board(this.board.getSize());
+  this.turn = this.nextPlayerName(this.winner);
+  this.winner = '';
 }
 
 function loadImages(images, callback) {
@@ -223,6 +221,7 @@ function renderGameToCanvas(game, canvas) {
   });
 
   context.font = '24px serif';
+  // context.textAlign = 'center';
 
   var message =
     game.winner ?
@@ -231,6 +230,11 @@ function renderGameToCanvas(game, canvas) {
       'Current turn ' + game.turn;
 
   context.fillText(message, game.board.getSize() * cellSize + 50, 100);
+
+  if (game.winner) {
+    context.fillText('Click anywhere to start new game.',
+      game.board.getSize() * cellSize + 50, 150);
+  }
 }
 
 var game = new XOGame();
@@ -258,6 +262,12 @@ var canvas = document.querySelector('#canvas');
 canvas.addEventListener('click', function(event) {
   var x = event.pageX - canvas.offsetLeft,
       y = event.pageY - canvas.offsetTop;
+
+  if (game.winner) {
+    game.reset();
+    renderGameToCanvas(game, canvas);
+    return;
+  }
 
   if (!isCoordOnBoard(game, x, y)) {
     return;
