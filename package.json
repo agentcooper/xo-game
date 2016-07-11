@@ -1,0 +1,21 @@
+{
+  "name": "xo-game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify index.js -o bundle.js",
+    "watch": "watchify index.js -o bundle.js --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agentcooper/xo-game.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/agentcooper/xo-game/issues"
+  },
+  "homepage": "https://github.com/agentcooper/xo-game#readme"
+}
