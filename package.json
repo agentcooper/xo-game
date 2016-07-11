@@ -17,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/agentcooper/xo-game/issues"
   },
-  "homepage": "https://github.com/agentcooper/xo-game#readme"
+  "homepage": "https://github.com/agentcooper/xo-game#readme",
+  "devDependencies": {
+    "browserify": "^13.0.1",
+    "watchify": "^3.7.0"
+  }
 }
