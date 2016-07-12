@@ -42,10 +42,14 @@ XOGameView.prototype.setupEvents = function() {
     var x = event.pageX - canvas.offsetLeft,
         y = event.pageY - canvas.offsetTop;
 
-    if (game.winner) {
+    if (game.winner || !game.isWinPossible()) {
       game.reset();
       this.renderGameToCanvas();
       return;
+    }
+
+    if (!game.isWinPossible()) {
+
     }
 
     if (!this.isCoordOnBoard(x, y)) {
@@ -125,17 +129,21 @@ XOGameView.prototype.renderGameToCanvas = function() {
     });
   });
 
-  var message =
-    game.winner ?
-      game.turn + ' has won the game!'
-      :
-      'Current turn ' + game.turn;
+  var message = '';
+
+  if (game.winner) {
+    message += game.turn + ' has won the game!';
+  } else if (!game.isWinPossible()) {
+    message += 'No possible winning combinations left.'
+  } else {
+    message += 'Current turn ' + game.turn;
+  }
 
   context.font = '24px serif';
   context.fillStyle = 'black';
   context.fillText(message, game.board.getSize() * cellSize + 50, 100);
 
-  if (game.winner) {
+  if (game.winner || !game.isWinPossible()) {
     context.fillText('Click anywhere to start new game.',
       game.board.getSize() * cellSize + 50, 150);
   }

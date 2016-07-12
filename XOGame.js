@@ -9,6 +9,8 @@ function XOGame(size) {
 
   this.turn = 'player1';
 
+  this.draw = false;
+
   this.winner = '';
 
   this.players = ['player1', 'player2'];
@@ -42,6 +44,18 @@ XOGame.prototype.getValidLines = function() {
     .concat(this.board.getRows())
     .concat(this.board.getColumns())
     .concat(this.board.getDiagonals());
+}
+
+XOGame.prototype.isWinPossible = function() {
+  function isWinPossibleInLine(line, shape) {
+    return line.every(function(value) {
+      return value === undefined || value === shape;
+    });
+  }
+
+  return this.getValidLines().some(function(line) {
+    return isWinPossibleInLine(line, X) || isWinPossibleInLine(line, O);
+  });
 }
 
 XOGame.prototype.checkIsWinner = function(playerName) {
