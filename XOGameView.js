@@ -15,6 +15,8 @@ function XOGameView(game, canvas) {
   this.game = game;
   this.context = canvas.getContext('2d');
   this.images = null;
+
+  this.highlightedCell = null;
 }
 
 XOGameView.prototype.setupEvents = function() {
@@ -28,11 +30,13 @@ XOGameView.prototype.setupEvents = function() {
 
     var indeces = this.XYtoIndeces(x, y);
 
-    if (this.isCoordOnBoard(x, y) && !game.board.rows[indeces.row][indeces.column]) {
-      this.renderGameToCanvas(x, y); 
+    if (this.isCoordOnBoard(x, y) && !game.board.get(indeces.row, indeces.column)) {
+      this.highlightedCell = indeces;
     } else {
-      this.renderGameToCanvas();
+      this.highlightedCell = null;
     }
+
+    this.renderGameToCanvas();
 
   }.bind(this));
 
@@ -50,9 +54,11 @@ XOGameView.prototype.setupEvents = function() {
       return;
     }
 
+    this.highlightedCell = null;
+
     var indeces = this.XYtoIndeces(x, y);
 
-    if (!game.board.rows[indeces.row][indeces.column]) {
+    if (!game.board.get(indeces.row, indeces.column)) {
       game.move(indeces.row, indeces.column);
     }
 
@@ -65,6 +71,16 @@ XOGameView.prototype.setupEvents = function() {
 XOGameView.prototype.drawGrid = function() {
   var context = this.context;
   var size = this.game.board.getSize();
+
+  if (this.highlightedCell) {
+    context.fillStyle = '#f5f5a4';
+    context.fillRect(
+      this.highlightedCell.column * cellSize,
+      this.highlightedCell.row * cellSize,
+      cellSize,
+      cellSize
+    );
+  }
 
   for (var i = 1; i <= size; i++) {
     context.beginPath();
@@ -79,7 +95,7 @@ XOGameView.prototype.drawGrid = function() {
   }
 }
 
-XOGameView.prototype.renderGameToCanvas = function(mouseX, mouseY) {
+XOGameView.prototype.renderGameToCanvas = function() {
   var context = this.context;
   var game = this.game;
 
@@ -128,16 +144,6 @@ XOGameView.prototype.renderGameToCanvas = function(mouseX, mouseY) {
   if (game.winner) {
     context.fillText('Click anywhere to start new game.',
       game.board.getSize() * cellSize + 50, 150);
-  }
-
-  if (mouseX && mouseY) {
-    context.fillStyle = '#f5f5a4';
-    context.fillRect(
-      (mouseX - (mouseX % cellSize)) + 2,
-      (mouseY - (mouseY % cellSize)) + 2,
-      cellSize - 4,
-      cellSize - 4
-    );
   }
 }
 
