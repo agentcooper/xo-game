@@ -48,10 +48,6 @@ XOGameView.prototype.setupEvents = function() {
       return;
     }
 
-    if (!game.isWinPossible()) {
-
-    }
-
     if (!this.isCoordOnBoard(x, y)) {
       return;
     }

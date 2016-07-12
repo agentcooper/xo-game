@@ -9,8 +9,6 @@ function XOGame(size) {
 
   this.turn = 'player1';
 
-  this.draw = false;
-
   this.winner = '';
 
   this.players = ['player1', 'player2'];
