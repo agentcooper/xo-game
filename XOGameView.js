@@ -19,6 +19,21 @@ function XOGameView(game, canvas) {
 XOGameView.prototype.setupEvents = function() {
   var canvas = this.canvas;
   var game = this.game;
+  var context = this.context;
+
+  canvas.addEventListener('mousemove', function(event) {
+    var x = event.pageX - canvas.offsetLeft,
+        y = event.pageY - canvas.offsetTop;
+
+    var indeces = this.XYtoIndeces(x, y);
+
+    if (this.isCoordOnBoard(x, y) && !game.board.rows[indeces.row][indeces.column]) {
+      this.renderGameToCanvas(x, y); 
+    } else {
+      this.renderGameToCanvas();
+    }
+
+  }.bind(this));
 
   canvas.addEventListener('click', function(event) {
     var x = event.pageX - canvas.offsetLeft,
@@ -36,7 +51,9 @@ XOGameView.prototype.setupEvents = function() {
 
     var indeces = this.XYtoIndeces(x, y);
 
-    game.move(indeces.row, indeces.column);
+    if (!game.board.rows[indeces.row][indeces.column]) {
+      game.move(indeces.row, indeces.column);
+    }
 
     this.renderGameToCanvas();
   }.bind(this));
@@ -61,7 +78,7 @@ XOGameView.prototype.drawGrid = function() {
   }
 }
 
-XOGameView.prototype.renderGameToCanvas = function() {
+XOGameView.prototype.renderGameToCanvas = function(mouseX, mouseY) {
   var context = this.context;
   var game = this.game;
 
@@ -93,7 +110,6 @@ XOGameView.prototype.renderGameToCanvas = function() {
     });
   });
 
-  context.font = '24px serif';
 
   var message =
     game.winner ?
@@ -101,11 +117,23 @@ XOGameView.prototype.renderGameToCanvas = function() {
       :
       'Current turn ' + game.turn;
 
+  context.font = '24px serif';
+  context.fillStyle = 'black';
   context.fillText(message, game.board.getSize() * cellSize + 50, 100);
 
   if (game.winner) {
     context.fillText('Click anywhere to start new game.',
       game.board.getSize() * cellSize + 50, 150);
+  }
+
+  if (mouseX && mouseY) {
+    context.fillStyle = '#f5f5a4';
+    context.fillRect(
+      (mouseX - (mouseX % cellSize)) + 2,
+      (mouseY - (mouseY % cellSize)) + 2,
+      cellSize - 4,
+      cellSize - 4
+    );
   }
 }
 
