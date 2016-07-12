@@ -101,12 +101,12 @@ XOGameView.prototype.renderGameToCanvas = function() {
 
   this.drawGrid();
 
-  loadImages([ 'x.jpg', 'o.jpg' ], function(images) {
+  loadImages([ 'images/x.jpg', 'images/o.jpg' ], function(images) {
     var imageSizes = scaleImageSizes(images, cellSize);
 
     var shapeToImageName = {};
-    shapeToImageName[X] = 'x.jpg';
-    shapeToImageName[O] = 'o.jpg';
+    shapeToImageName[X] = 'images/x.jpg';
+    shapeToImageName[O] = 'images/o.jpg';
 
     game.board.rows.forEach(function(row, j) {
       row.forEach(function(value, i) {

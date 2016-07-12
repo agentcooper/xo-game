@@ -2,11 +2,11 @@
   "name": "xo-game",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify index.js -o bundle.js",
-    "watch": "watchify index.js -o bundle.js --verbose"
+    "build": "browserify src/index.js -o dist/bundle.js",
+    "watch": "watchify src/index.js -o dist/bundle.js --verbose"
   },
   "repository": {
     "type": "git",
