@@ -1,15 +1,32 @@
+var cache = {};
+
 function loadImages(images, callback) {
   var result = {};
 
+  function isDone() {
+    return Object.keys(result).length === images.length;
+  }
+
   images.forEach(function(src) {
-    var image = new Image();
-    image.src = src;
 
-    image.onload = function() {
-      result[src] = image;
+    if (cache[src]) {
+      result[src] = cache[src];
 
-      if (Object.keys(result).length === images.length) {
+      if (isDone()) {
         callback(result);
+      }
+
+    } else {
+      var image = new Image();
+      image.src = src;
+
+      image.onload = function() {
+        result[src] = image;
+        cache[src] = image;
+
+        if (isDone()) {
+          callback(result);
+        }
       }
     }
   });

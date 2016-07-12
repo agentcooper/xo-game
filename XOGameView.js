@@ -14,8 +14,6 @@ function XOGameView(game, canvas) {
   this.canvas = canvas;
   this.game = game;
   this.context = canvas.getContext('2d');
-  this.images = null;
-
   this.highlightedCell = null;
 }
 
@@ -103,33 +101,29 @@ XOGameView.prototype.renderGameToCanvas = function() {
 
   this.drawGrid();
 
-  if (!this.images) {
-    loadImages([ 'x.jpg', 'o.jpg' ], function(images) {
-      this.images = images;
-    }.bind(this));
-  } else {
-    var imageSizes = scaleImageSizes(this.images, cellSize);
-  }
+  loadImages([ 'x.jpg', 'o.jpg' ], function(images) {
+    var imageSizes = scaleImageSizes(images, cellSize);
 
-  var shapeToImageName = {};
-  shapeToImageName[X] = 'x.jpg';
-  shapeToImageName[O] = 'o.jpg';
+    var shapeToImageName = {};
+    shapeToImageName[X] = 'x.jpg';
+    shapeToImageName[O] = 'o.jpg';
 
-  game.board.rows.forEach(function(row, j) {
-    row.forEach(function(value, i) {
-      if (!value) {
-        return;
-      }
+    game.board.rows.forEach(function(row, j) {
+      row.forEach(function(value, i) {
+        if (!value) {
+          return;
+        }
 
-      var imageName = shapeToImageName[value];
+        var imageName = shapeToImageName[value];
 
-      context.drawImage(this.images[imageName],
-        (i * cellSize) + ((cellSize - imageSizes[imageName].width) / 2),
-        (j * cellSize) + ((cellSize - imageSizes[imageName].height) / 2),
-        imageSizes[imageName].width,
-        imageSizes[imageName].height);
-    }.bind(this));
-  }.bind(this));
+        context.drawImage(images[imageName],
+          (i * cellSize) + ((cellSize - imageSizes[imageName].width) / 2),
+          (j * cellSize) + ((cellSize - imageSizes[imageName].height) / 2),
+          imageSizes[imageName].width,
+          imageSizes[imageName].height);
+      });
+    });
+  });
 
   var message =
     game.winner ?
