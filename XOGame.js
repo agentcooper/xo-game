@@ -4,8 +4,8 @@ var C = require('./constants');
 var X = C.X;
 var O = C.O;
 
-function XOGame() {
-  this.board = new Board(4);
+function XOGame(size) {
+  this.board = new Board(size);
 
   this.turn = 'player1';
 
