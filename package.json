@@ -4,9 +4,10 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
+    "start": "open index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify src/index.js -o dist/bundle.js",
-    "watch": "watchify src/index.js -o dist/bundle.js --verbose"
+    "build": "browserify src/index.js -t babelify -o dist/bundle.js",
+    "watch": "watchify src/index.js -t babelify -o dist/bundle.js --verbose"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/agentcooper/xo-game#readme",
   "devDependencies": {
+    "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "watchify": "^3.7.0"
   }

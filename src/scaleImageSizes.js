@@ -1,10 +1,10 @@
 function scaleImageSizes(images, cellSize) {
-  var margin = 5;
+  const margin = 5;
 
-  var imageSizes = Object.keys(images).reduce(function(result, imageName) {
-    var w = images[imageName].width;
-    var h = images[imageName].height;
-    var widthToHeight = w / h;
+  const imageSizes = Object.keys(images).reduce(function(result, imageName) {
+    const w = images[imageName].width;
+    const h = images[imageName].height;
+    const widthToHeight = w / h;
 
     result[imageName] =
       w >= h ?

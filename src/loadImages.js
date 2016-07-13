@@ -1,13 +1,13 @@
-var cache = {};
+const cache = {};
 
 function loadImages(images, callback) {
-  var result = {};
+  const result = {};
 
   function isDone() {
     return Object.keys(result).length === images.length;
   }
 
-  images.forEach(function(src) {
+  images.forEach(src => {
 
     if (cache[src]) {
       result[src] = cache[src];
@@ -17,7 +17,7 @@ function loadImages(images, callback) {
       }
 
     } else {
-      var image = new Image();
+      const image = new Image();
       image.src = src;
 
       image.onload = function() {

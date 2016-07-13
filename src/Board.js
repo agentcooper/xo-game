@@ -1,61 +1,62 @@
-function Board(n) {
-  this.rows =
-    Array.from({ length: n })
-      .map(function(row) {
-        return Array.from({ length: n })
-      });
-}
+class Board {
+  constructor(size) {
+    this.rows =
+      Array.from({ length: size })
+        .map(function(row) {
+          return Array.from({ length: size })
+        });
+  }
 
-Board.prototype.getSize = function() {
-  return this.rows.length;
-}
+  getSize() {
+    return this.rows.length;
+  }
 
-Board.prototype.set = function(x, y, value) {
-  this.rows[x][y] = value;
-};
+  setValue(x, y, value) {
+    this.rows[x][y] = value;
+  }
 
-Board.prototype.get = function(x, y) {
-  return this.rows[x][y];
-};
+  getValue(x, y) {
+    return this.rows[x] ? this.rows[x][y] : undefined;
+  }
 
-Board.prototype.toString = function() {
-  return this.rows.map(function(row) {
-    return row.join(' ');
-  }).join('\n');
-};
+  toString() {
+    return this.rows.map(row => row.join(' ')).join('\n');
+  }
 
-Board.prototype.getRows = function() {
-  return this.rows;
-};
+  getRows() {
+    return this.rows;
+  }
 
-Board.prototype.getColumns = function() {
-  var columns = [];
+  getColumns() {
+    let columns = [];
 
-  for (var i = 0; i < this.rows.length; i++) {
-    var column = [];
+    for (let i = 0; i < this.rows.length; i++) {
+      const column = [];
 
-    for (var j = 0; j < this.rows.length; j++) {
-      column.push(this.rows[j][i]);
+      for (let j = 0; j < this.rows.length; j++) {
+        column.push(this.rows[j][i]);
+      }
+
+      columns.push(column);
     }
 
-    columns.push(column);
+    return columns;
   }
 
-  return columns;
-};
+  getDiagonals() {
+    const mainDiagonal = [];
+    for (let i = 0; i < this.rows.length; i++) {
+      mainDiagonal.push(this.rows[i][i]);
+    }
 
-Board.prototype.getDiagonals = function() {
-  var mainDiagonal = [];
-  for (var i = 0; i < this.rows.length; i++) {
-    mainDiagonal.push(this.rows[i][i]);
+    const backDiagonal = [];
+    for (let i = 0; i < this.rows.length; i++) {
+      backDiagonal.push(this.rows[i][this.rows.length - i - 1]);
+    }
+
+    return [mainDiagonal, backDiagonal];
   }
+}
 
-  var backDiagonal = [];
-  for (var i = 0; i < this.rows.length; i++) {
-    backDiagonal.push(this.rows[i][this.rows.length - i - 1]);
-  }
-
-  return [mainDiagonal, backDiagonal];
-};
 
 module.exports = Board;
