@@ -1,35 +1,21 @@
-const cache = {};
+const promiseCache = {};
 
-function loadImages(images, callback) {
-  const result = {};
+const loadImage = (src) =>
+  new Promise((r, j) => {
+    const image = new Image();
+    image.src = src;
 
-  function isDone() {
-    return Object.keys(result).length === images.length;
-  }
-
-  images.forEach(src => {
-
-    if (cache[src]) {
-      result[src] = cache[src];
-
-      if (isDone()) {
-        callback(result);
-      }
-
-    } else {
-      const image = new Image();
-      image.src = src;
-
-      image.onload = function() {
-        result[src] = image;
-        cache[src] = image;
-
-        if (isDone()) {
-          callback(result);
-        }
-      }
-    }
+    image.onload = () => r(image);
   });
+
+function loadImages(images) {
+  const promises = images.map(src => {
+    promiseCache[src] = promiseCache[src] || loadImage(src);
+
+    return promiseCache[src];
+  });
+
+  return Promise.all(promises);
 }
 
 module.exports = loadImages;

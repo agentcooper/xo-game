@@ -1,6 +1,6 @@
 const Board = require('./Board'),
       loadImages = require('./loadImages'),
-      scaleImageSizes = require('./scaleImageSizes');
+      scaleImages = require('./scaleImages');
 
 const { cellSize, CANVAS_WIDTH, CANVAS_HEIGHT, X, O } = require('./constants');
 
@@ -101,12 +101,13 @@ class XOGameView {
 
     this.drawGrid();
 
-    loadImages([ 'images/x.jpg', 'images/o.jpg' ], function(images) {
-      const imageSizes = scaleImageSizes(images, cellSize);
+    loadImages([ 'images/x.jpg', 'images/o.jpg' ]).then(images => {
+      const [xImage, oImage] = scaleImages(images, cellSize);
 
-      const shapeToImageName = {};
-      shapeToImageName[X] = 'images/x.jpg';
-      shapeToImageName[O] = 'images/o.jpg';
+      const shapeToImage = {
+        [X]: xImage,
+        [O]: oImage,
+      };
 
       game.board.rows.forEach((row, j) => {
         row.forEach((value, i) => {
@@ -114,13 +115,13 @@ class XOGameView {
             return;
           }
 
-          const imageName = shapeToImageName[value];
+          const image = shapeToImage[value];
 
-          context.drawImage(images[imageName],
-            (i * cellSize) + ((cellSize - imageSizes[imageName].width) / 2),
-            (j * cellSize) + ((cellSize - imageSizes[imageName].height) / 2),
-            imageSizes[imageName].width,
-            imageSizes[imageName].height);
+          context.drawImage(image.original,
+            (i * cellSize) + ((cellSize - image.width) / 2),
+            (j * cellSize) + ((cellSize - image.height) / 2),
+            image.width,
+            image.height);
         });
       });
     });
